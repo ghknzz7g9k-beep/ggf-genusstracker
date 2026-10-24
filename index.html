@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GGF-Genusstracker</title>
+<style>
+body {
+  font-family: -apple-system, Arial, sans-serif;
+  background: #f2f6f5;
+  color: #18343b;
+  margin: 0;
+}
+header {
+  background: #123640;
+  color: white;
+  padding: 24px;
+}
+main { padding: 16px; max-width: 600px; margin: auto; }
+section {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+button {
+  background: #187866;
+  color: white;
+  border: 0;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 16px;
+  margin: 5px 0;
+}
+strong { font-size: 26px; }
+small { color: #657b80; }
+</style>
+</head>
+<body>
+<header>
+<h2>🥂 GGF-Genusstracker</h2>
+Mein Schiff 5 · Karibik 2026
+</header>
+<main>
+<section>
+<h3>Eure GGF-Bilanz</h3>
+<p>Erfasster Gegenwert</p>
+<strong id="total">0,00 €</strong>
+<p>Paketkosten: 2.492,00 €</p>
+<p id="difference"></p>
+</section>
+
+<section>
+<h3>Schnellerfassung</h3>
+<p>Moët & Chandon Rosé · 0,1 l</p>
+<p>10,70 € pro Glas</p>
+<button id="add">+ 1 Glas erfassen</button>
+<p id="count">0 Gläser erfasst</p>
+</section>
+
+<section>
+<h3>Datenspeicherung</h3>
+<small>Die Testeinträge bleiben in diesem
+Browser gespeichert.</small>
+<p><button id="reset">Test zurücksetzen</button></p>
+</section>
+</main>
+
+<script>
+const PRICE = 10.70;
+const COST = 2492;
+const KEY = "ggf-test-count";
+let count = Number(localStorage.getItem(KEY) || 0);
+
+function euro(value) {
+  return value.toLocaleString("de-DE", {
+    style: "currency",
+    currency: "EUR"
+  });
+}
+
+function update() {
+  const total = count * PRICE;
+  document.getElementById("total").textContent = euro(total);
+  document.getElementById("count").textContent =
+    count + " Gläser erfasst";
+  document.getElementById("difference").textContent =
+    total >= COST
+      ? "Über der Gewinnschwelle: " + euro(total - COST)
+      : "Bis zur Gewinnschwelle: " + euro(COST - total);
+}
+
+document.getElementById("add").addEventListener("click", function() {
+  count++;
+  localStorage.setItem(KEY, String(count));
+  update();
+});
+
+document.getElementById("reset").addEventListener("click", function() {
+  if (confirm("Testeinträge löschen?")) {
+    count = 0;
+    localStorage.setItem(KEY, "0");
+    update();
+  }
+});
+
+update();
+</script>
+</body>
+</html>
