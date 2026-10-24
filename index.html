@@ -1,111 +1,19 @@
-
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GGF-Genusstracker</title>
-<style>
-body {
-  font-family: -apple-system, Arial, sans-serif;
-  background: #f2f6f5;
-  color: #18343b;
-  margin: 0;
-}
-header {
-  background: #123640;
-  color: white;
-  padding: 24px;
-}
-main { padding: 16px; max-width: 600px; margin: auto; }
-section {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-button {
-  background: #187866;
-  color: white;
-  border: 0;
-  padding: 14px 18px;
-  border-radius: 10px;
-  font-size: 16px;
-  margin: 5px 0;
-}
-strong { font-size: 26px; }
-small { color: #657b80; }
-</style>
-</head>
-<body>
-<header>
-<h2>🥂 GGF-Genusstracker</h2>
-Mein Schiff 5 · Karibik 2026
-</header>
-<main>
-<section>
-<h3>Eure GGF-Bilanz</h3>
-<p>Erfasster Gegenwert</p>
-<strong id="total">0,00 €</strong>
-<p>Paketkosten: 2.492,00 €</p>
-<p id="difference"></p>
-</section>
-
-<section>
-<h3>Schnellerfassung</h3>
-<p>Moët & Chandon Rosé · 0,1 l</p>
-<p>10,70 € pro Glas</p>
-<button id="add">+ 1 Glas erfassen</button>
-<p id="count">0 Gläser erfasst</p>
-</section>
-
-<section>
-<h3>Datenspeicherung</h3>
-<small>Die Testeinträge bleiben in diesem
-Browser gespeichert.</small>
-<p><button id="reset">Test zurücksetzen</button></p>
-</section>
-</main>
-
-<script>
-const PRICE = 10.70;
-const COST = 2492;
-const KEY = "ggf-test-count";
-let count = Number(localStorage.getItem(KEY) || 0);
-
-function euro(value) {
-  return value.toLocaleString("de-DE", {
-    style: "currency",
-    currency: "EUR"
-  });
-}
-
-function update() {
-  const total = count * PRICE;
-  document.getElementById("total").textContent = euro(total);
-  document.getElementById("count").textContent =
-    count + " Gläser erfasst";
-  document.getElementById("difference").textContent =
-    total >= COST
-      ? "Über der Gewinnschwelle: " + euro(total - COST)
-      : "Bis zur Gewinnschwelle: " + euro(COST - total);
-}
-
-document.getElementById("add").addEventListener("click", function() {
-  count++;
-  localStorage.setItem(KEY, String(count));
-  update();
-});
-
-document.getElementById("reset").addEventListener("click", function() {
-  if (confirm("Testeinträge löschen?")) {
-    count = 0;
-    localStorage.setItem(KEY, "0");
-    update();
-  }
-});
-
-update();
-</script>
-</body>
-</html>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#153a43"><title>GGF-Genusstracker</title><style>body{margin:0;background:#f2f5f4;color:#18343a;font:16px -apple-system,BlinkMacSystemFont,Arial}header{background:#153a43;color:white;padding:20px}h1{font-size:23px;margin:0 0 5px}main{max-width:750px;margin:auto;padding:14px}section{background:white;border-radius:15px;padding:17px;margin-bottom:13px}h2{font-size:19px;margin:0 0 12px}button,select,input{font:inherit;border:1px solid #ccd8d5;border-radius:10px;padding:11px;background:white;color:inherit}button{cursor:pointer}button.primary{background:#147968;color:white;border:0;font-weight:700}.muted{color:#687c7c;font-size:13px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:9px 0}.row>*{min-width:0}select{width:100%}.item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #e9eeee}.item:last-child{border:0}.item button{white-space:nowrap}.total{font-size:30px;font-weight:750}.progress{height:10px;background:#dce7e4;border-radius:20px;overflow:hidden}.progress div{height:100%;background:#147968;width:0}.tabs{display:flex;gap:8px}.tabs button.active{background:#153a43;color:white}.chip{font-size:13px;margin:4px}.entry{font-size:14px}.pill{border-radius:99px;background:#eef3f2;padding:5px 10px}.danger{color:#ad3131}</style></head><body><header><h1>🥂 GGF-Genusstracker</h1><div>Mein Schiff 5 · Karibik 2026 · gemeinsamer Tracker</div></header><main><section><h2>GGF-Bilanz</h2><div class="row" style="justify-content:space-between"><div><div class="muted">Gegenwert</div><div class="total" id="total">0,00 €</div></div><div><div class="muted">Paketpreis</div><strong>2.492,00 €</strong></div></div><div class="progress"><div id="progress"></div></div><p id="diff"></p><div class="muted" id="stats"></div></section><section><h2>Schnellfavoriten</h2><div id="favorites"></div></section><section><h2>Restaurant oder Bar</h2><select id="place"></select><div class="tabs row"><button id="food" class="active">🍽️ Speisen</button><button id="drink">🥂 Getränke</button></div><input id="search" placeholder="In diesem Bereich suchen …" style="width:100%;box-sizing:border-box"><div id="products"></div><p class="muted">Ein Tipp auf + erfasst eine Portion. Für zwei Portionen zweimal tippen. Menüs nicht zusätzlich in Einzelgänge zerlegen.</p></section><section><h2>Eigene Position erfassen</h2><div class="row"><input id="customName" placeholder="Bezeichnung" style="flex:2"><input id="customPrice" type="number" step="0.01" min="0" placeholder="€" style="width:80px"><button id="customAdd" class="primary">+ Erfassen</button></div></section><section><h2>Verlauf <span id="entryCount"></span></h2><div class="row"><input type="date" id="dateFilter"><button id="allDates">Alle Tage</button></div><div id="history"></div></section><section><h2>Backup & Export</h2><p class="muted">Die Daten bleiben nur in diesem Browser auf diesem Gerät. Regelmäßig Backup exportieren; Safari-Daten nicht löschen. Für echten Offline-Betrieb ist eine zusätzliche Installation nötig.</p><div class="row"><button id="backup">JSON-Backup</button><button id="csv">CSV-Export</button><button id="restore">Backup importieren</button><input id="file" type="file" accept=".json" hidden></div><button id="reset" class="danger">Alle Einträge löschen</button></section></main><script>
+const products=[["Champagner Treff","Getränke","Moët Rosé",10.7],["Champagner Treff","Getränke","Moët Brut",10.7],["Champagner Treff","Getränke","Philippe Gonet Rosé",10.7],["Champagner Treff","Getränke","Pommery Rosé",10],["Champagner Treff","Getränke","Purple Berry Sprizz",11.3],["Champagner Treff","Getränke","Royal Sloe",11.3],["Champagner Treff","Getränke","Botanical Wine",7.9],["Champagner Treff","Getränke","No Lo Sprizz",6.9],["Surf & Turf","Speisen","Filetsteak 150 g",22.5],["Surf & Turf","Speisen","Filetsteak 250 g",37.5],["Surf & Turf","Speisen","Filetsteak 400 g",60],["Surf & Turf","Speisen","Sirloin 250 g",32.5],["Surf & Turf","Speisen","Sirloin 400 g",52],["Surf & Turf","Speisen","Rib-Eye 250 g",32.5],["Surf & Turf","Speisen","Rib-Eye 400 g",52],["Surf & Turf","Speisen","Bison-Entrecôte 250 g",40],["Surf & Turf","Speisen","Chianina Filet 250 g",45],["Surf & Turf","Speisen","Grillteller",39],["Surf & Turf","Speisen","Lammkoteletts",32],["Surf & Turf","Speisen","Tomahawk für zwei",59.9],["Surf & Turf","Speisen","Flanksteak für zwei",44.8],["Surf & Turf","Speisen","T-Bone",42.9],["Surf & Turf","Speisen","Hummer-/Langustinenschwanz",49],["Surf & Turf","Speisen","Wagyu-Burger",24.9],["Surf & Turf","Speisen","Spare Ribs",17.5],["Surf & Turf","Speisen","New York Cheesecake",9.5],["Surf & Turf","Getränke","Moët Rosé 0,1 l",10.7],["Surf & Turf","Getränke","Moët Brut 0,1 l",10.7],["Surf & Turf","Getränke","Chablis 0,1 l",8.5],["BBQ Grilltische","Speisen","Grilltisch-Menü pro Person",55],["Hanami","Speisen","Ruam Gan 4-Gänge-Menü",49],["Hanami","Speisen","Halber Hummer",39.9],["Hanami","Speisen","Rinderfilet-Tataki",22.8],["Hanami","Speisen","Hanami-Ente",20.9],["Hanami","Speisen","Lachs-Curry",19.6],["Hanami","Speisen","Zander",16.8],["Hanami","Speisen","Miso-Cod",16.4],["Hanami","Speisen","Schweinebauch",14.5],["Hanami","Speisen","Wasabi-Garnele",12.5],["Hanami","Speisen","Rinderfilet-Sashimi",11.5],["Hanami","Speisen","Samurai-Salat",9.6],["Hanami","Speisen","Tom Kha",7.5],["Hanami","Speisen","Samurai Roll",8.4],["Hanami","Speisen","California Roll",7.9],["Hanami","Speisen","Crispy Banane",6.4],["Hanami","Getränke","Ruam Gan Weinbegleitung",29],["Hanami","Getränke","Tims Trio",16],["Hanami","Getränke","Tims Quartett",33],["Hanami","Getränke","Mizumi Champagner",10.7],["Schmankerl","Speisen","Bürgermeisterstück für zwei",44],["Schmankerl","Speisen","Altwiener Tafelspitz",28.9],["Schmankerl","Speisen","Wiener Schnitzel",28],["Schmankerl","Speisen","Backhähnchen",24],["Schmankerl","Speisen","Herrengulasch",20],["Schmankerl","Speisen","Halbe Bauernente",38],["Schmankerl","Speisen","Zwiebelrostbraten",32.9],["Schmankerl","Speisen","3-Gänge-Menü",39],["Schmankerl","Speisen","Kaiserschmarrn",19.5],["Schmankerl","Speisen","Salzburger Nockerln",26.5],["Schmankerl","Speisen","Brettljause",15.9],["Schmankerl","Getränke","Polz Sekt Brut Rosé",6.9],["Schmankerl","Getränke","Umathum Rosa",7.7],["Atlantik / X-Lounge","Speisen","Wiener Schnitzel vom Kalb",19.9],["Atlantik / X-Lounge","Speisen","Zürcher Geschnetzeltes",21.5],["Atlantik / X-Lounge","Speisen","Seezunge im Ganzen",24.5],["Atlantik / X-Lounge","Speisen","Hummer Thermidor",49],["Atlantik / X-Lounge","Speisen","Wolfsbarsch im Ganzen",32],["Atlantik / X-Lounge","Speisen","Halber Hummer als Ergänzung",24.5],["Osteria","Speisen","Vitello tonnato",7.9],["Osteria","Speisen","Antipasti-Teller",6.9],["Osteria","Speisen","Ochsenschwanzsuppe",4.5],["Osteria","Speisen","Tagliatelle Salsiccia",5.5],["Osteria","Speisen","Pappardelle Wildschwein",6.9],["Osteria","Speisen","Cannelloni Kalbfleisch",5.5],["Osteria","Speisen","Safran-Ravioli Lachs",6.9],["Osteria","Speisen","Penne Meeresfrüchte",7.9],["Osteria","Speisen","Pizza Lachs",6.9],["Osteria","Speisen","Pizza Burrata",8.9],["Osteria","Speisen","Pizza Meeresfrüchte",6.9],["Osteria","Speisen","Trüffel-Risotto",7.9],["Osteria","Speisen","Dulce-de-leche-Tarte",5.9],["Diamant Bar","Speisen","Philly Steak Sandwich",27.9],["Diamant Bar","Speisen","Sushi-Box gemischt",24],["Diamant Bar","Speisen","Sushi-Box vegetarisch",18],["Diamant Bar","Speisen","Kaiserschmarrn",13.9],["Diamant Bar","Speisen","Kaviarvariation",27.9],["Diamant Bar","Speisen","New York Cheesecake",9.5],["Diamant Bar","Getränke","Moët Rosé 0,1 l",10.7],["Diamant Bar","Getränke","Ron Zacapa XO",15],["Diamant Bar","Getränke","Gin Mare & Tonic",11.3],["Diamant Bar","Getränke","Espresso Martini",7.9],["Diamant Bar","Getränke","Singapore Sling",11.2],["Diamant Service","Speisen","Frühlingsrollen",4.9],["Diamant Service","Speisen","Sommerrolle Garnelen",7.9],["Diamant Service","Speisen","Philly Steak Sandwich",12.9],["Diamant Service","Speisen","Sushi-Box gemischt",19],["Diamant Service","Speisen","New York Cheesecake",7.9],["Diamant Service","Speisen","Kaiserschmarrn",10.5],["Diamant Service","Getränke","Moët Rosé 0,1 l",10.5],["Diamant Service","Getränke","Ron Zacapa XO",12],["Diamant Service","Getränke","Bellini",8.5]];
+const $=id=>document.getElementById(id),euro=v=>v.toLocaleString("de-DE",{style:"currency",currency:"EUR"}),KEY="ggf-real-v2";
+let entries=[];try{entries=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(entries))entries=[]}catch(e){entries=[]}
+let type="Speisen";const places=[...new Set(products.map(p=>p[0]))];places.forEach(p=>{let o=document.createElement("option");o.value=o.textContent=p;$("place").append(o)});$("place").value=localStorage.getItem("ggf-last-place")||places[0];
+function save(){try{localStorage.setItem(KEY,JSON.stringify(entries))}catch(e){alert("Speichern fehlgeschlagen: Bitte Backup exportieren.")}render()}
+function add(name,price,place){entries.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,price,place,date:new Date().toLocaleDateString("sv-SE")});save()}
+function renderProducts(){let p=$("place").value,q=$("search").value.toLowerCase();$("products").replaceChildren();let found=products.filter(x=>x[0]===p&&x[1]===type&&x[2].toLowerCase().includes(q));if(!found.length)$("products").textContent="Keine Einträge in dieser Kategorie.";found.forEach(x=>{let d=document.createElement("div");d.className="item";let t=document.createElement("div");t.textContent=x[2];let small=document.createElement("div");small.className="muted";small.textContent=euro(x[3]);t.append(small);let b=document.createElement("button");b.className="primary";b.textContent="+ Erfassen";b.onclick=()=>add(x[2],x[3],x[0]);d.append(t,b);$("products").append(d)})}
+function render(){let sum=entries.reduce((a,e)=>a+e.price,0);$("total").textContent=euro(sum);$("diff").textContent=sum>=2492?"Über der Gewinnschwelle: "+euro(sum-2492):"Bis zur Gewinnschwelle: "+euro(2492-sum);$("progress").style.width=Math.min(100,sum/2492*100)+"%";$("stats").textContent=entries.length+" Buchungen";$("entryCount").textContent="("+entries.length+")";$("history").replaceChildren();let filtered=entries.filter(x=>!$("dateFilter").value||x.date===$("dateFilter").value);filtered.slice().reverse().forEach(e=>{let d=document.createElement("div");d.className="item entry";let t=document.createElement("div");t.textContent=e.name+" · "+euro(e.price);let sub=document.createElement("div");sub.className="muted";sub.textContent=e.date+" · "+e.place;t.append(sub);let b=document.createElement("button");b.textContent="Löschen";b.onclick=()=>{entries=entries.filter(x=>x.id!==e.id);save()};d.append(t,b);$("history").append(d)});if(!filtered.length)$("history").textContent="Keine Buchungen."}
+$("place").onchange=()=>{localStorage.setItem("ggf-last-place",$("place").value);renderProducts()};$("search").oninput=renderProducts;["food","drink"].forEach(id=>$(id).onclick=()=>{type=id==="food"?"Speisen":"Getränke";$("food").classList.toggle("active",id==="food");$("drink").classList.toggle("active",id==="drink");renderProducts()});
+const favs=[["Moët Rosé","Champagner Treff","Moët Rosé"],["BBQ-Menü","BBQ Grilltische","Grilltisch-Menü pro Person"],["Filetsteak","Surf & Turf","Filetsteak 250 g"],["Hanami-Menü","Hanami","Ruam Gan 4-Gänge-Menü"]];favs.forEach(f=>{let x=products.find(p=>p[0]===f[1]&&p[2]===f[2]);let b=document.createElement("button");b.className="chip";b.textContent="+ "+f[0];b.onclick=()=>add(x[2],x[3],x[0]);$("favorites").append(b)});
+$("customAdd").onclick=()=>{let name=$("customName").value.trim(),price=Number($("customPrice").value);if(!name||!Number.isFinite(price)||price<=0)return alert("Bezeichnung und gültigen Preis eingeben.");add(name,price,$("place").value);$("customName").value="";$("customPrice").value=""};
+$("dateFilter").onchange=render;$("allDates").onclick=()=>{$("dateFilter").value="";render()};
+function download(name,content,type){let url=URL.createObjectURL(new Blob([content],{type})),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+$("backup").onclick=()=>download("ggf-backup.json",JSON.stringify({version:2,entries},null,2),"application/json");
+$("csv").onclick=()=>download("ggf-buchungen.csv","Datum;Ort;Position;Preis EUR\n"+entries.map(e=>[e.date,e.place,e.name,e.price.toFixed(2).replace(".",",")].map(x=>'"'+String(x).replaceAll('"','""')+'"').join(";")).join("\n"),"text/csv");
+$("restore").onclick=()=>$("file").click();$("file").onchange=async ev=>{try{let d=JSON.parse(await ev.target.files[0].text());if(!Array.isArray(d.entries)||!d.entries.every(e=>typeof e.name==="string"&&Number.isFinite(e.price)&&typeof e.id==="string"))throw Error();if(confirm("Alle bisherigen Einträge durch das Backup ersetzen?")){entries=d.entries;save()}}catch(e){alert("Ungültige Backup-Datei.")}ev.target.value=""};
+$("reset").onclick=()=>{if(confirm("Alle Einträge endgültig löschen?")){entries=[];save()}};renderProducts();render();
+</script></body></html>
